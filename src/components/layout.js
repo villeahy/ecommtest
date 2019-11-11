@@ -5,17 +5,24 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React, { memo } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 import styled from "@emotion/styled"
+import { Global } from "@emotion/core"
 
 import Navigation from "./navigation"
 
 const Div = styled.div`
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
   justify-content: center;
+  background-color: #eeeeee;
+  align-items: flex-start;
+  width: 950px;
+  padding: 4rem 2rem;
+  border-radius: 2rem;
 `
 
 const Layout = ({ children, path, location }) => {
@@ -29,13 +36,31 @@ const Layout = ({ children, path, location }) => {
     }
   `)
   console.log(location)
+  const from = location.state ? location.state.from : null
+
   return (
-    <>
-      <Div>
-        <Navigation siteTitle={data.site.siteMetadata.title} path={path} />
-        {children}
-      </Div>
-    </>
+    <Div>
+      <Global
+        styles={{
+          html: {
+            fontSize: "62.5%",
+          },
+          body: {
+            margin: 0,
+            padding: 0,
+            minHeight: "98vh",
+            backgroundColor: "#000000",
+            fontSize: "1.6rem",
+          },
+        }}
+      />
+      <Navigation
+        siteTitle={data.site.siteMetadata.title}
+        path={path}
+        from={from}
+      />
+      {children}
+    </Div>
   )
 }
 
@@ -43,4 +68,4 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 }
 
-export default memo(Layout)
+export default Layout

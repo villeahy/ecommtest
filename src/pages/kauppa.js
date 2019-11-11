@@ -23,29 +23,33 @@ class ShopPage extends React.Component {
   }
   render() {
     const items = this.props.data.allStripeSku.edges.map(
-      ({
-        node: {
-          price,
-          currency,
-          id,
-          product: {
-            name,
-            metadata: { img_alt },
+      (
+        {
+          node: {
+            price,
+            currency,
+            id,
+            product: {
+              name,
+              metadata: { img_alt },
+            },
+            localFiles,
           },
-          localFiles,
         },
-      }) => ({
+        i
+      ) => ({
         id,
         name,
         price,
         img_alt,
         currency,
         localFiles,
+        order: i < 1 ? 1 : 3,
       })
     )
     return (
       <>
-        <SEO title="Need money for records shop" />
+        <SEO title="Kauppa" />
         {items.map(item => (
           <Item key={item.id} {...item} buy={this.redirectToCheckout} />
         ))}

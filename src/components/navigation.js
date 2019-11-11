@@ -1,26 +1,28 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
+import { useSpring, animated } from "react-spring"
 
-import { MyContext } from "./stateProvider"
+// import { MyContext } from "./stateProvider"
 import Logo from "./svglogo"
 
 const LogoLink = styled(Link)`
-  width: ${props => (props.location === "/" ? 500 : 250)}px;
+  width: 100%;
 `
 
 const StyledLink = styled(Link)`
-  padding: 1rem 2rem;
-  margin: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  color: #7a5d49;
 `
 
 const Nav = styled.nav`
-  border: 1px solid #999999;
-  margin: 5px;
-  padding: 5px;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  order: ${props => props.order};
 `
 
 const Div = styled.div`
@@ -29,20 +31,46 @@ const Div = styled.div`
   justify-content: center;
 `
 
-const Navigation = ({ siteTitle, path }) => {
-  const test = useContext(MyContext)
+const LogoContainer = styled(animated.div)`
+  display: inline-block;
+  background-color: black;
+  width: 400px;
+  border-radius: 2rem;
+`
+const getFromSize = from => {
+  if (!from) return 0
+  if (from === "/") return 500
+  return 275
+}
 
-  console.log(test)
+const Navigation = ({ siteTitle, path, from }) => {
+  // const test = useContext(MyContext)
+  const fromSize = getFromSize(from)
+  const toSize = path === "/" ? 500 : 275
+  const props = useSpring({
+    width: toSize,
+    from: { width: fromSize },
+  })
+
+  const order = path === "/kauppa/" ? 2 : 1
 
   return (
-    <Nav>
-      <LogoLink location={path} to="/">
-        <Logo />
-      </LogoLink>
+    <Nav order={order}>
+      <LogoContainer style={props}>
+        <LogoLink location={path} to="/" state={{ from: path }}>
+          <Logo />
+        </LogoLink>
+      </LogoContainer>
       <Div>
-        <StyledLink to={"/shop"}>Kauppa</StyledLink>
-        <StyledLink to={"/shop"}>Info</StyledLink>
-        <StyledLink to={"/shop"}>Yhteystiedot</StyledLink>
+        <StyledLink to={"/kauppa"} state={{ from: path }}>
+          Kauppa
+        </StyledLink>
+        <StyledLink to={"/kauppa"} state={{ from: path }}>
+          Info
+        </StyledLink>
+        <StyledLink to={"/kauppa"} state={{ from: path }}>
+          Yhteystiedot
+        </StyledLink>
       </Div>
     </Nav>
   )
